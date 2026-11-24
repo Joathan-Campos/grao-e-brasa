@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+/* Grão & Brasa — paleta "noite → manhã"
+   Noite (hero): espresso, creme, brasa.
+   Manhã (resto): farinha/aveia, tinta marrom, terracota (palette flour-terracotta). */
+@theme {
+  --color-night: #15100c;
+  --color-night-2: #211812;
+  --color-ember: #e0793a;
+  --color-ember-soft: #f0a46b;
+  --color-cream: #f3e9d8;
+  --color-oat: #f6f1e7;
+  --color-oat-2: #ebe3d4;
+  --color-ink: #2b241e;
+  --color-ink-soft: #5f5246;
+  --color-terracotta: #a3472b;
+  --color-terracotta-dark: #86371f;
+  --color-line: rgb(43 36 30 / 0.14);
+
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-figtree), system-ui, sans-serif;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  --nav-h: 72px;
+  --gut: clamp(20px, 6vw, 120px);
+  color-scheme: light;
+}
+@media (max-width: 639px) {
+  :root { --nav-h: 60px; }
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: var(--nav-h);
+}
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+body {
+  background: var(--color-oat);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+}
+
+@layer components {
+.wrap {
+  width: min(100% - 2 * var(--gut), 1200px);
+  margin-inline: auto;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 60, "WONK" 0;
+  letter-spacing: -0.02em;
+}
+
+/* Foco visível em toda a página */
+:focus-visible {
+  outline: 2px solid var(--color-terracotta);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.on-night :focus-visible { outline-color: var(--color-ember-soft); }
+
+.skip-link {
+  position: absolute;
+  left: var(--gut);
+  top: -60px;
+  z-index: 100;
+  background: var(--color-ink);
+  color: var(--color-oat);
+  padding: 10px 16px;
+}
+.skip-link:focus { top: 12px; }
+
+/* Botões: um formato, dois pesos */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 24px;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1;
+  transition: transform 0.25s var(--ease-out-soft), background-color 0.25s, color 0.25s, border-color 0.25s;
+  will-change: transform;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0) scale(0.98); }
+.btn svg { transition: transform 0.25s var(--ease-out-soft); }
+.btn:hover svg { transform: translateX(3px); }
+.btn--primary { background: var(--color-terracotta); color: #fff; }
+.btn--primary:hover { background: var(--color-terracotta-dark); }
+.btn--ember { background: var(--color-ember); color: var(--color-night); }
+.btn--ember:hover { background: var(--color-ember-soft); }
+.btn--ghost-night { border: 1px solid rgb(243 233 216 / 0.35); color: var(--color-cream); }
+.btn--ghost-night:hover { border-color: var(--color-cream); }
+.btn--secondary { border: 1px solid var(--color-ink); color: var(--color-ink); }
+.btn--secondary:hover { background: var(--color-ink); color: var(--color-oat); }
+
+/* Link com sublinhado que se desenha */
+.link-draw {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.35s var(--ease-out-soft);
+  padding-bottom: 2px;
+}
+.link-draw:hover, .link-draw:focus-visible { background-size: 100% 1px; }
+
+/* Fotos: zoom leve dentro da moldura */
+.photo-frame { overflow: hidden; background: var(--color-oat-2); }
+.photo-frame img { transition: transform 0.7s var(--ease-out-soft); }
+.photo-frame:hover img { transform: scale(1.03); }
+
+/* Inclinação 3D sutil (cards e galeria) */
+.tilt {
+  transform-style: preserve-3d;
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--ty, 0px));
+  transition: transform 0.5s var(--ease-out-soft), box-shadow 0.5s var(--ease-out-soft);
+}
+.tilt.is-tilting { transition: transform 0.12s linear, box-shadow 0.5s var(--ease-out-soft); }
+
+}
+
+/* Elementos com entrada animada: escondidos só quando o JS confirma que vai animar */
+html.js-motion [data-reveal],
+html.js-motion [data-enter],
+html.js-motion .hero-art { opacity: 0; }
+html.js-motion .hero-word { transform: translateY(110%); }
+
+@keyframes scrollcue {
+  0% { transform: translateY(-100%); }
+  60%, 100% { transform: translateY(200%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .tilt { transform: none !important; }
+  .photo-frame:hover img { transform: none; }
+}
+
+/* Barra de rolagem do carrinho */
+.thin-scroll { scrollbar-width: thin; scrollbar-color: var(--color-line) transparent; }

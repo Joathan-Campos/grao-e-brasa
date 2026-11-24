@@ -1,0 +1,23 @@
+# dependências e builds (são recriados com npm install / npm run build)
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# ferramentas e arquivos pesados que não fazem parte do projeto
+video/bin/
+modelos-originais/
+*.zip
+
+# artefatos do HyperFrames e das skills
+.hyperframes/
+renders/
+.taste-skill/
+
+# sistema / editor / segredos
+.DS_Store
+Thumbs.db
+.env*
+.vercel
+npm-debug.log*
